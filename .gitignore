@@ -1,0 +1,10 @@
+__pycache__/
+.vscode/
+.benchmarks/
+.env
+
+# server
+server/src/.env
+server/server.log
+
+
