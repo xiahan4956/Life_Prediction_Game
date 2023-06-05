@@ -148,5 +148,3 @@ def get_restart():
     session.clear()
     return jsonify({"redirect": "/game_start"})
 
-if __name__ == '__main__':
-    app.run(host='192.168.0.100', port=5000, debug=True)

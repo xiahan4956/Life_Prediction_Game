@@ -3,6 +3,8 @@ __pycache__/
 .benchmarks/
 .env
 
+.venv/
+
 # server
 server/src/.env
 server/server.log
