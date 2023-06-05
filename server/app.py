@@ -148,3 +148,5 @@ def get_restart():
     session.clear()
     return jsonify({"redirect": "/game_start"})
 
+if __name__ == '__main__':
+    app.run()
