@@ -57,6 +57,5 @@ The player select features above:
 Now,please predict.
 '''
 
-
 # - Use "You" to refer to the player.
 # - Negative events should be more than positive events.
