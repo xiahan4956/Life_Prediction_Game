@@ -1,17 +1,19 @@
 from flask import Flask, request, jsonify, session
+from flask_session   import Session
 from src.get_style import generate_style
 from src.get_attribute import generate_attribute
 from src.get_feature import generate_feature, choose_feature
 from src.get_dead_age import generate_dead_age
 from src.predict import life_predict
 from flask_cors import CORS
-from flask_session import Session 
 
 app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-CORS(app, supports_credentials=True)
 app.secret_key = 'a3cJNmd0cf50nfdPc40sfnA0nfd9vnA3Bn0anfd'
+CORS(app, supports_credentials=True)
+# 服务端储存session
+SESSION_TYPE ="filesystem"
+app.config.from_object(__name__)
+Session(app)
 
 
 @app.route('/api/potential_game_style', methods=['GET'])
