@@ -10,4 +10,4 @@ app.config.globalProperties.$http = axios;  // 将 Axios 绑定到 Vue 实例,�
 
 app.use(router);  // 使用 Vue Router
 app.mount('#app');  // 挂载到 DOM
-this.$http.get('http://192.168.0.100:5000/api/predict', { withCredentials: true });
+this.$http.get('http://qq4956.pythonanywhere.com/api/predict', { withCredentials: true });

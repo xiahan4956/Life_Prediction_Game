@@ -28,7 +28,7 @@
         methods: {
             async fetchPrediction() {
                 try {
-                    const response = await this.$http.post('http://192.168.0.100:5000/api/predict', { prediction_history: this.prediction_history });
+                    const response = await this.$http.post('http://qq4956.pythonanywhere.com/api/predict', { prediction_history: this.prediction_history });
                     const { prediction, continue_request, prediction_history } = response.data;
              
                     // eslint-disable-next-line no-debugger

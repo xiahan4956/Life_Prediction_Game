@@ -5,8 +5,11 @@ from src.get_feature import generate_feature, choose_feature
 from src.get_dead_age import generate_dead_age
 from src.predict import life_predict
 from flask_cors import CORS
+from flask_session import Session 
 
 app = Flask(__name__)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
 CORS(app, supports_credentials=True)
 app.secret_key = 'a3cJNmd0cf50nfdPc40sfnA0nfd9vnA3Bn0anfd'
 
