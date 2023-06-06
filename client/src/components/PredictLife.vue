@@ -44,7 +44,7 @@ import ComfirmButton from './ComfirmButton.vue';
         methods: {
             async fetchPrediction() {
                 try {
-                    const response = await this.$http.post('http://qq4956.pythonanywhere.com/api/predict', { 
+                    const response = await this.$http.post('https://qq4956.pythonanywhere.com/api/predict', { 
                         game_style:this.game_style,
                         attributes:this.attributes,
                         features:this.features,

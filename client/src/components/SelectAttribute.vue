@@ -60,7 +60,7 @@
               }
               if (this.points == 0) {
                   try {
-                      const response = await this.$http.post('http://qq4956.pythonanywhere.com/api/distributed_attribute', {
+                      const response = await this.$http.post('https://qq4956.pythonanywhere.com/api/distributed_attribute', {
                           health: this.attributeValues.health,
                           family: this.attributeValues.family,
                           intelligence: this.attributeValues.intelligence,
@@ -91,7 +91,7 @@
       async mounted() {
           const selectedStyle = this.$route.params.feature;
           try {
-              const response = await this.$http.post('http://qq4956.pythonanywhere.com/api/selected_game_style', {selected_game_style: selectedStyle});
+              const response = await this.$http.post('https://qq4956.pythonanywhere.com/api/selected_game_style', {selected_game_style: selectedStyle});
 
               const potential_features = response.data.potential_features;
 

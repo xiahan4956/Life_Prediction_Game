@@ -3,6 +3,7 @@
 # Introduction
 **Experience the simulation of lives from different backgrounds by Claude AI!**
 
+
 - Use claude AI to simulate the life of different settings
 - Use flask to build the web server
 - Use Vue.js to build the web page
