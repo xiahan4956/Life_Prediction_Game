@@ -45,7 +45,7 @@ export default {
         },
         async send_features() {
             if (this.selectedFeatures.length > 0) {
-                const response = await axios.post('http://qq4956.pythonanywhere.com/api/selected_features', {
+                const response = await axios.post('http://192.168.0.100:5000/api/selected_features', {
                     selected_features: this.selectedFeatures
                 },{ withCredentials: true });
                 if (response.data.msg === 'features received') {
