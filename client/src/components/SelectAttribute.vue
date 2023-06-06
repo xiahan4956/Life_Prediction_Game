@@ -60,14 +60,20 @@
               }
               if (this.points == 0) {
                   try {
-                      const response = await this.$http.post('http://192.168.0.100:5000/api/distributed_attribute', {
+                      const response = await this.$http.post('http://qq4956.pythonanywhere.com/api/distributed_attribute', {
                           health: this.attributeValues.health,
                           family: this.attributeValues.family,
                           intelligence: this.attributeValues.intelligence,
                           beauty: this.attributeValues.beauty
                       });
 
-                      if (response.data.msg == 'attribute received') {
+                      if (response.data.dead_age) {
+                          const  dead_age = response.data.dead_age;
+
+                          // 保存属性到localStorage
+                          localStorage.setItem('attributes', JSON.stringify(this.attributeValues));
+                          localStorage.setItem('dead_age', dead_age)
+
                           this.$router.push({name: 'SelectFeatures'});
                       } else {
                           // handle error response
@@ -85,10 +91,11 @@
       async mounted() {
           const selectedStyle = this.$route.params.feature;
           try {
-              const response = await this.$http.post('http://192.168.0.100:5000/api/selected_game_style', {selected_game_style: selectedStyle});
+              const response = await this.$http.post('http://qq4956.pythonanywhere.com/api/selected_game_style', {selected_game_style: selectedStyle});
 
               const potential_features = response.data.potential_features;
 
+              localStorage.setItem('game_style', selectedStyle);
               localStorage.setItem('potentialFeatures', JSON.stringify(potential_features));
               this.hasSetFeatures = true; // Set the flag here
           } catch (error) {

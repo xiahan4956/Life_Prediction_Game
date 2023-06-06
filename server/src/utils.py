@@ -2,7 +2,7 @@
 import os
 import anthropic
 import logging
-
+import time
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -26,5 +26,6 @@ def get_msg(pmt,model = "claude-instant-v1") -> str:
             break
         except Exception as e:
             logger.error("anthropic error: %s", e)
+            time.sleep(3)
             
     return response["completion"]

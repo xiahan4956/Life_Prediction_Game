@@ -17,7 +17,7 @@
 <script>
 import ComfirmButton from './ComfirmButton.vue';
 import FeatureComponent from './FeatureComponent.vue';
-import axios from 'axios';
+
 
 export default {
     name: "SelectFeatures",
@@ -45,21 +45,14 @@ export default {
         },
         async send_features() {
             if (this.selectedFeatures.length > 0) {
-                const response = await axios.post('http://192.168.0.100:5000/api/selected_features', {
-                    selected_features: this.selectedFeatures
-                },{ withCredentials: true });
-                if (response.data.msg === 'features received') {
+                    localStorage.setItem('selectedFeatures', JSON.stringify(this.selectedFeatures));
                     this.$router.push({ name: 'PredictLife' });
                 }
                 else {
-                    alert("Something went wrong");
+                    alert("Please select at least one feature");
                 }
-            } 
-            else {
-                alert("Please select at least one feature");
             }
         },
-    },
     mounted() {
         this.potentialFeatures = JSON.parse(localStorage.getItem('potentialFeatures'));
     },

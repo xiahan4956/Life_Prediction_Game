@@ -10,46 +10,64 @@
 </template>
 
 <script>
-    import ComfirmButton from './ComfirmButton.vue';
+import ComfirmButton from './ComfirmButton.vue';
 
     export default {
         name: "PredictLife",
         components: {
             ComfirmButton 
         },
+        mounted(){
+            this.game_style = localStorage.getItem('game_style');
+            this.attributes = JSON.parse(localStorage.getItem('attributes'));
+            this.dead_age = localStorage.getItem('dead_age');
+            this.features = JSON.parse(localStorage.getItem('selectedFeatures'));
+
+            this.fetchPrediction();
+            
+        
+        },
         data() {
             return {
+                game_style: null,
+                features: null,
+                attributes: null,
+                selectedStyle: null,
+                dead_age: null,
                 predictions: [],
                 isLoading: true,
                 restartGame: false,
-                prediction_history: ''
+                prediction_history: '',
+                start_age:0,    
             };
         },
         methods: {
             async fetchPrediction() {
                 try {
-                    const response = await this.$http.post('http://192.168.0.100:5000/api/predict', { prediction_history: this.prediction_history });
-                    const { prediction, continue_request, prediction_history } = response.data;
+                    const response = await this.$http.post('http://qq4956.pythonanywhere.com/api/predict', { 
+                        game_style:this.game_style,
+                        attributes:this.attributes,
+                        features:this.features,
+                        dead_age:this.dead_age,
+                        start_age:this.start_age,
+                        prediction_history: this.prediction_history });
+                    const { prediction, continue_request, next_start_age,prediction_history } = response.data;
              
-                    // eslint-disable-next-line no-debugger
-                    // debugger;
-                    
-                     // 将prediction转换为JSON对象
-                    const rawJsonStr = prediction.replace("</json>", "").replace("<json>", "");
-                    const jsonArr = JSON.parse(rawJsonStr);
-
-                    jsonArr.map(item => {
-                        item.text = `${item.age}: ${item.event}`;
-                    });
-
-                    this.predictions.push(...jsonArr);
+                    // 更新现有属性
+                    this.start_age = next_start_age;
                     this.prediction_history = prediction_history;
 
-    
+                     // 渲染结果
+                    const rawJsonStr = prediction.replace("</json>", "").replace("<json>", "");
+                    const jsonArr = JSON.parse(rawJsonStr);
+                    jsonArr.map(item => {
+                        item.text = `age${item.age}: ${item.event}`;
+                    });
+                    this.predictions.push(...jsonArr);
+            
                     console.log(this.predictions);
+                    console.log(this.dead_age)
                     
-                
-
                     if(continue_request) {
                         this.fetchPrediction();
                     } else {
@@ -69,9 +87,6 @@
                 
                 this.$router.push({ name: 'StartPage' });
             }
-        },
-        mounted() {
-            this.fetchPrediction();
         },
     };
 </script>

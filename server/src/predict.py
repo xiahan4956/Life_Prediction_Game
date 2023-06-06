@@ -46,7 +46,7 @@ def life_predict(sytle:str,
        
     # 返回下次预测的起始年龄
     next_start_age = end_age + 1
-    if next_start_age > dead_age:
+    if next_start_age > int(dead_age):
         next_start_age = None
     
     
