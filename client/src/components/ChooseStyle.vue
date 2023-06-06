@@ -31,6 +31,7 @@
                 // 有selectedStyle才跳转,没有就弹窗选择
                 if (this.selectedStyle) {
                         this.$router.push({ name: 'SelectAttribute', params: { feature: this.selectedStyle } });
+                        window.localStorage.setItem('selectedStyle', this.selectedStyle);
                 } else {
                     alert("Please select a game style before proceeding.");
                 }

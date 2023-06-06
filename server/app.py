@@ -5,15 +5,12 @@ from src.get_feature import generate_feature, choose_feature
 from src.get_dead_age import generate_dead_age
 from src.predict import life_predict
 from flask_cors import CORS
-from flask_session import Session
+
 
 app = Flask(__name__)
 app.secret_key = '123'
 CORS(app, supports_credentials=True)
-# 服务端储存session
-SESSION_TYPE ="filesystem"
-app.config.from_object(__name__)
-Session(app)
+
 
 
 @app.route('/api/potential_game_style', methods=['GET'])
@@ -49,7 +46,6 @@ def post_selected_game_style():
     
     try:
         selected_game_style = request.json["selected_game_style"]     
-        session["game_style"] = selected_game_style
         
         # 生成potential_feature
         potential_features = generate_feature(selected_game_style)
@@ -76,58 +72,59 @@ def post_distributed_attribute():
           beauty: <value>,
         }
     Returns:
-            {"msg": "attribute received"}
+            {"dead_age": dead_age}
     '''
     attributes = request.json
     session["attributes"] = attributes
     
     # 生成死亡年龄
-    session["dead_age"] = generate_dead_age(attributes)
+    dead_age = generate_dead_age(attributes)
     
-    return jsonify({"msg": "attribute received"})
+    return jsonify({"dead_age": dead_age})
 
 
-@app.route('/api/selected_features', methods=['POST'])
-def post_selected_features():
-    '''
-    Endpoint: /api/selected_features
-    Method: POST
-    Description: 接受玩家选择的角色特性,用于最终预测
-    Input: {"selected_features": "<selected_features>"}
-    Returns: {"status": "success"}
-    '''
-    selected_features = request.json["selected_features"]
-    session["features"] = selected_features
-    
-    return jsonify({"msg": "features received"})
 
 @app.route('/api/predict', methods=['POST'])
 def post_predict():
     '''
-    Endpoint: /api/predict
+Endpoint: /api/predict
     Method: POST
     Description: 返回一次预测结果
     Input:  
-        prediction_history :<prediction_history:str>
+        game_style :<game_style:str>
+        attributes :<attributes:josn>
+        features :<features:json>
+        dead_age :<dead_age:int>
+        start_age :<start_age:int>
+        prediction_history :<prediction_history:str> (optional)
     Returns:
-                {"prediction": current_prediction,
-                 "continue_request": continue_request
-                }
+        {
+            "prediction": current_prediction,
+            "continue_request": continue_request,
+            "next_start_age": next_start_age,
+            "prediction_history": prediction_history
+        }
     '''
     data = request.json
+    sytle = data["game_style"]
+    attribute = data["attributes"]
+    player_feature = data["features"]
+    dead_age = data["dead_age"]
+    start_age = data["start_age"]
     prediction_history = data.get('prediction_history', '')
+
 
     # 生成预测结果
     current_prediction, prediction_history, next_start_age = life_predict(
-                                                            sytle = session['game_style'], 
-                                                            attribute=session['attributes'], 
-                                                            player_feature= session['features'],
-                                                            dead_age = session['dead_age'],
-                                                            start_age = session.get('start_age', 0),
+                                                            sytle = sytle,
+                                                            attribute=attribute,
+                                                            player_feature= player_feature,
+                                                            dead_age = dead_age,
+                                                            start_age = start_age,
                                                             prediction_history = prediction_history
                                                         )
     #增加下次开始的年龄
-    session["start_age"] = next_start_age
+
     
     # 给一个继续请求的标注
     continue_request = bool(next_start_age)

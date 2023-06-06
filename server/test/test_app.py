@@ -1,68 +1,48 @@
-#打印当前目录
-import os
-print(os.getcwd())
-
 import pytest
-from app import app
-from flask import session
+from flask import json
+from app import app  # 你的Flask应用的名字
 
 @pytest.fixture
 def client():
-    app.config['TESTING'] = True
     with app.test_client() as client:
         with app.app_context():
             yield client
 
-def test_potential_game_style(client):
-    rv = client.get('/api/potential_game_style')
-    assert rv.status_code == 200
-    assert isinstance(rv.json['potential_game_style'], list)
+def test_get_potential_game_style(client):
+    response = client.get('/api/potential_game_style')
+    assert response.status_code == 200
+    assert isinstance(json.loads(response.data)['potential_game_style'], list)
 
+def test_post_selected_game_style(client):
+    data = {"selected_game_style": "style1"}
+    response = client.post('/api/selected_game_style', json=data)
+    assert response.status_code == 200
+    assert isinstance(json.loads(response.data)['potential_features'], list)
 
-def test_selected_game_style(client):
-    rv = client.post('/api/selected_game_style', json={'selected_game_style': 'Cyber punk'})
-    assert rv.status_code == 200
-    assert 'potential_features' in rv.json
+def test_post_distributed_attribute(client):
+    data = {"health": 1, "family": 2, "intelligence": 3, "beauty": 4}
+    response = client.post('/api/distributed_attribute', json=data)
+    assert response.status_code == 200
+    assert 'dead_age' in json.loads(response.data)
 
-def test_distributed_attribute(client):
+def test_post_predict(client):
     data = {
-            "health": 10,
-            "family": 8,
-            "intelligence": 7,
-            "beauty": 6
-        }
-    rv = client.post('/api/distributed_attribute', json=data)
-    assert rv.status_code == 200
-    assert rv.json['msg'] == 'attribute received'
+        "game_style": "style1",
+        "attributes": {"health": 1, "family": 2, "intelligence": 3, "beauty": 4},
+        "features": {"feature1": 1, "feature2": 2},
+        "dead_age": 75,
+        "start_age": 20,
+        "prediction_history": "prediction1"
+    }
+    response = client.post('/api/predict', json=data)
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert 'prediction' in response_data
+    assert 'continue_request' in response_data
+    assert 'next_start_age' in response_data
+    assert 'prediction_history' in response_data
 
-
-def test_selected_features(client):
-    rv = client.post('/api/selected_features', json={"selected_features": ["冷血杀手:战斗力强,但是人际关系薄弱","黑客专家:电脑高手,但是身体虚弱"]})
-    assert rv.status_code == 200
-    assert rv.json['msg'] == 'features received'
-
-def test_get_predict(client):
-    with client.session_transaction() as session:
-        session['game_style'] = 'Cyber punk'
-        session['attributes'] = {
-            "health": 10,
-            "family": 8,
-            "intelligence": 7,
-            "beauty": 6
-        }
-        session['dead_age'] = 33
-        session['features'] = ["冷血杀手:战斗力强,但是人际关系薄弱","黑客专家:电脑高手,但是身体虚弱"]
-    
-    rv = client.post('/api/predict', json={"prediction_history": ""})
-    assert rv.status_code == 200
-    assert 'prediction' in rv.json
-    assert 'prediction_history' in rv.json
-    assert 'continue_request' in rv.json
-
-
-
-def test_restart(client):
-    rv = client.get('/api/restart')
-    assert rv.status_code == 200
-    assert rv.json['redirect'] == '/game_start'
-
+def test_get_restart(client):
+    response = client.get('/api/restart')
+    assert response.status_code == 200
+    assert json.loads(response.data)['redirect'] == "/game_start"
