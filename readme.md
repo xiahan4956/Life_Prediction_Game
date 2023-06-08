@@ -3,7 +3,7 @@
 # Introduction
 **Experience the simulation of lives from different backgrounds by Claude AI!**
 
-You could experience it at : https://life-prediction-game.vercel.app/
+You could experience it at : www.xiahan.info
 
 - Use claude AI to simulate the life of different settings
 - Use flask to build the  server
