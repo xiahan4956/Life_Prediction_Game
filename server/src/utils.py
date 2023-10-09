@@ -1,31 +1,31 @@
 # utils.py
 import os
-import anthropic
 import logging
 import time
 from dotenv import load_dotenv
 load_dotenv()
-
+ANTHROPIC_API_KEY  = os.getenv("ANTHROPIC_API_KEY")
 logger = logging.getLogger(__name__)
 
+from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
 
-def get_msg(pmt,model = "claude-instant-v1") -> str:
-    logger.info("Getting message from anthropic")
-    client = anthropic.Client(os.environ['ANTHROPIC_API_KEY'])
+def ask_claude(content):
+    client = Anthropic(api_key = ANTHROPIC_API_KEY)    
+    prompt=f"{HUMAN_PROMPT}{content}{AI_PROMPT}"
     
     while True:
         try:
-            response = client.completion(
-                prompt=pmt,
-                stop_sequences = [anthropic.HUMAN_PROMPT],
-                model=model,
-                max_tokens_to_sample=1000000,
-                temperature=1
+            response = client.completions.create(
+                prompt=prompt,
+                model="claude-instant-1.2",
+                temperature = 0,
+                max_tokens_to_sample = 1000
             )
-            logger.info(f"anthropic response received:{response['completion']}")
             break
         except Exception as e:
-            logger.error("anthropic error: %s", e)
             time.sleep(3)
+            print(e)
             
-    return response["completion"]
+    print(response.completion)
+
+    return response.completion
