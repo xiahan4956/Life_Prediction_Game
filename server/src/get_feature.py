@@ -1,6 +1,7 @@
 import logging
 import json
 import random
+import re
 
 from src.utils import ask_claude
 from prompt.feature import generate_feature_pmt, generate_feature_exeample
@@ -12,11 +13,14 @@ def generate_feature(style):
     user_pmt = generate_feature_pmt.format(style=style)
     ai_resp = generate_feature_exeample
 
-    pmt = f"\n\nHuman: {user_pmt} \n\nAssistant: {ai_resp} \n\nHuman:Your format is right! Let's try again! {user_pmt}  \n\nAssistant: This is a json return:\n\n"
+    pmt = f"\n\nHuman: {user_pmt} \n\nAssistant: {ai_resp} \n\nHuman:Your format is right! Let's try again! {user_pmt}  \n\nAssistant: <res>"
 
     while True:
         try:
             feature = ask_claude(pmt)
+            
+            # 利用正则,找出[]之间的部分,也保留[]
+            feature = re.search(r"\[.*?\]", feature,re.S).group(0)
             if json.loads(feature):
                 logger.info("Feature generated successfully")
                 break

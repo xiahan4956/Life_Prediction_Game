@@ -11,7 +11,7 @@ from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
 
 def ask_claude(content):
     client = Anthropic(api_key = ANTHROPIC_API_KEY)    
-    prompt=f"{HUMAN_PROMPT}{content}{AI_PROMPT}"
+    prompt=content
     
     while True:
         try:

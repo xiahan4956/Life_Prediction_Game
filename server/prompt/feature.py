@@ -4,22 +4,24 @@ generate_feature_pmt ='''
 Let's play a life simulated game. 
 First, we need to generate the player's features. 
 
-<Format> 
-The format is the json as follows:
+Requirements:
+- Please provide 7 features to choose from.
+- positive features are more than negtive features.
+- Features should be detailed, not general.
+- Please privide feature related with {style} 
+
+Return
+<res>
 [
 	{{"feature_name": "feature_description"}},
 	{{"feature_name": "feature_description"}},
 	{{"feature_name": "feature_description"}},
 	....
 ]
-</Format>
+</res>
 
-<Requirements>:
-- Please provide 7 features to choose from.
-- positive features are more than negtive features.
-- Features should be detailed, not general.
-- Please privide feature related with {style} 
-</Requirements>
+
+
 
 
 '''
