@@ -16,7 +16,7 @@ def generate_feature(style):
 
     while True:
         try:
-            feature = ask_claude(pmt, "claude-instant-v1")
+            feature = ask_claude(pmt)
             if json.loads(feature):
                 logger.info("Feature generated successfully")
                 break
