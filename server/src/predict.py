@@ -1,6 +1,6 @@
 # prediction.py
 import logging
-from src.utils import get_msg
+from src.utils import ask_claude
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ def life_predict(sytle:str,
     pmt = f"\n\nHuman:{pmt} \n\nAssistant:Here is the simulated result of the player\'s life:<json>"
 
     # 生成预测
-    current_prediction = get_msg(pmt)
+    current_prediction = ask_claude(pmt)
     
     # 整理数据
     prediction_history = prediction_history + current_prediction + "\n"
