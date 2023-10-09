@@ -2,7 +2,7 @@ import logging
 import json
 import random
 
-from src.utils import get_msg
+from src.utils import ask_claude
 from prompt.feature import generate_feature_pmt, generate_feature_exeample
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ def generate_feature(style):
 
     while True:
         try:
-            feature = get_msg(pmt, "claude-instant-v1")
+            feature = ask_claude(pmt, "claude-instant-v1")
             if json.loads(feature):
                 logger.info("Feature generated successfully")
                 break
