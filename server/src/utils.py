@@ -18,7 +18,7 @@ def ask_claude(content):
             response = client.completions.create(
                 prompt=prompt,
                 model="claude-instant-1.2",
-                temperature = 0,
+                temperature = 0.5,
                 max_tokens_to_sample = 1000
             )
             break
